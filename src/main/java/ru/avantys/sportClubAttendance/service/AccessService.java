@@ -23,9 +23,9 @@ public class AccessService {
         this.membershipService = membershipService;
     }
 
-    public AccessRule createAccessRule(AccessRuleDto accessRuleDto, MembershipDto membershipDto) {
-        Membership membership = membershipService.getMembershipById(membershipDto.id())
-                .orElseThrow(() -> new IllegalArgumentException("Membership not found with id: " + membershipDto.id()));
+    public AccessRule createAccessRule(AccessRuleDto accessRuleDto, UUID membershipId) {
+        Membership membership = membershipService.getMembershipById(membershipId)
+                .orElseThrow(() -> new IllegalArgumentException("Membership not found with id: " + membershipId));
 
         AccessRule accessRule = AccessRuleDto.toAccessRule(accessRuleDto, membership);
         return accessRuleRepository.save(accessRule);
