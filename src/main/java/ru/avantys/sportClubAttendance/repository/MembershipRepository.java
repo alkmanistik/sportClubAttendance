@@ -18,20 +18,6 @@ public interface MembershipRepository extends JpaRepository<Membership, UUID> {
 
     List<Membership> findByType(MembershipType type);
 
-    @Query("SELECT m FROM Membership m WHERE m.client.id = :clientId AND m.endDate > CURRENT_TIMESTAMP")
-    List<Membership> findActiveMembershipsByClientId(@Param("clientId") UUID clientId);
-
-    @Query("SELECT m FROM Membership m WHERE m.endDate BETWEEN :start AND :end")
-    List<Membership> findMembershipsExpiringBetween(@Param("start") LocalDateTime start,
-                                                    @Param("end") LocalDateTime end);
-
-    @Query("SELECT COUNT(m) FROM Membership m WHERE m.client.id = :clientId AND m.endDate > CURRENT_TIMESTAMP")
-    long countActiveMembershipsByClient(@Param("clientId") UUID clientId);
-
-    @Query("SELECT m FROM Membership m WHERE m.client.id = :clientId AND m.type = :type AND m.endDate > CURRENT_TIMESTAMP")
-    Optional<Membership> findActiveMembershipByClientAndType(@Param("clientId") UUID clientId,
-                                                             @Param("type") MembershipType type);
-
     long count();
 
     @Query("SELECT COUNT(m) FROM Membership m WHERE m.endDate > CURRENT_TIMESTAMP")
