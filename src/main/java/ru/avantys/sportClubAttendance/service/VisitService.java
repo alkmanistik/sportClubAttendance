@@ -2,8 +2,6 @@ package ru.avantys.sportClubAttendance.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.avantys.sportClubAttendance.dto.MembershipDto;
-import ru.avantys.sportClubAttendance.dto.VisitDto;
 import ru.avantys.sportClubAttendance.model.Membership;
 import ru.avantys.sportClubAttendance.model.Visit;
 import ru.avantys.sportClubAttendance.repository.VisitRepository;
@@ -24,16 +22,16 @@ public class VisitService {
         this.membershipService = membershipRepository;
     }
 
-    public Visit createVisit(MembershipDto membershipDto, VisitDto visitDto) {
-        Membership membership = membershipService.getMembershipById(membershipDto.id())
-                .orElseThrow(() -> new IllegalArgumentException("Membership not found with id: " + membershipDto.id()));
-        Visit oldVisit = visitRepository.findLastVisitByMembershipId(membershipDto.id()).orElse(null);
+    public Visit createVisit(UUID membershipId, String zone) {
+        Membership membership = membershipService.getMembershipById(membershipId)
+                .orElseThrow(() -> new IllegalArgumentException("Membership not found with id: " + membershipId));
+        Visit oldVisit = visitRepository.findLastVisitByMembershipId(membershipId).orElse(null);
         closeOldVisit(oldVisit);
 
         Visit visit = new Visit();
         visit.setMembership(membership);
         visit.setEntryTime(LocalDateTime.now());
-        visit.setZone(visitDto.zone());
+        visit.setZone(zone);
 
         return visitRepository.save(visit);
     }
